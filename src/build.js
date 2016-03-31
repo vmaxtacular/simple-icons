@@ -84,16 +84,16 @@ var header = fs.readFileSync('./header.html', 'utf8');
 var footer = fs.readFileSync('./footer.html', 'utf8');
 
 // Build content
-var main = "        <p class=\"hero\">" + source.icons.length + " SVG icons for popular brands <a href=\"https://github.com/danleech/simple-icons\">Download them from GitHub</a></p>\n        <input type=\"text\" id=\"search\" class=\"search-field\" autofocus>\n            <ul class=\"tiles\">";
+var main = "            <ul class=\"tiles tiles--icons\">";
 
 for (var i = 0; i < source.icons.length; i++) {
     var fileName = source.icons[i].title.toLowerCase();
-    fileName = fileName.replace(/[ |!|.]/g, '');
-    fileName = fileName.replace(/[+]/, 'plus');
+    fileName = fileName.replace(/[!|’|.| ]/g, ''); // Replace bang, apostrophe, period and space with nothing.
+    fileName = fileName.replace(/[+]/, 'plus'); // Replace the plus symbol with “plus”.
     filePath = "../icons/" + fileName + ".svg";
     var fs = require('fs');
     var svg = fs.readFileSync(filePath, 'utf8');
-    main += "\n            <li class=\"tiles__item\" data-search=\"" + source.icons[i].title.toLowerCase() + " " + fileName.toLowerCase() + " " + source.icons[i].hex.toLowerCase() + "\" style=\"background-color:#" + source.icons[i].hex + "\"><a href=\"https://simpleicons.org/icons/" + fileName + ".svg\">" + svg + "</a><span class=\"tile-name\">" + source.icons[i].title + "</span>" + "<br><span class=\"hex\">#" + source.icons[i].hex + "</span></li>";
+    main += "\n            <li class=\"tiles__item\" data-search=\"" + source.icons[i].title.toLowerCase() + " " + fileName.toLowerCase() + " " + source.icons[i].hex.toLowerCase() + "\" style=\"background-color:#" + source.icons[i].hex + "\"><a href=\"https://simpleicons.org/icons/" + fileName + ".svg\" class=\"icon--link\" title=\"" + source.icons[i].title + "\">" + svg + "<span class=\"tile-name\">" + source.icons[i].title + "</span></a>" + "<span class=\"hex\">#" + source.icons[i].hex + "</span></li>";
 }
 
 // Put all content together and export to index.html
@@ -102,7 +102,7 @@ fs.writeFile("../index.html", htmlOutput, function(err) {
     if(err) {
         return console.log(err);
     }
-    console.log("The index.html file was saved!");
+    console.log("The index.html file was built with " + source.icons.length + " icons!");
 });
 
 // Also output to 404.html
@@ -110,5 +110,5 @@ fs.writeFile("../404.html", htmlOutput, function(err) {
     if(err) {
         return console.log(err);
     }
-    console.log("The 404.html file was saved!");
+    console.log("The 404.html file was built with " + source.icons.length + " icons!");
 });
